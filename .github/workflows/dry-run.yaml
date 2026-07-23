@@ -3,23 +3,82 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     branches:
-    - main
+      - main
   workflow_dispatch:
+
 jobs:
   web-deploy:
     name: Dry Run
     runs-on: ubuntu-latest
     steps:
-    - name: Get latest code
-      uses: actions/checkout@v7
+      - name: Get latest code
+        uses: actions/checkout@v7
 
-    - name: Sync files
-      id: sync
-      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        protocol: ftps
-        dry-run: true
-        local-dir: ./src/
+      - name: Sync files (Dry Run)
+        id: sync
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          dry-run: true
+          local-dir: ./src/
+
+      - name: Comment PR with Dry Run Output
+        uses: actions/github-script@v7
+        # Only run on PRs so workflow_dispatch runs don't crash when trying to find PR context
+        if: github.event_name == 'pull_request' && always()
+        env:
+          SYNC_OUTCOME: ${{ steps.sync.outcome }}
+          # The FTP step outputs stdout/stderr directly to steps.sync.outputs
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const outcome = process.env.SYNC_OUTCOME;
+
+            // Format log preview
+            const details = `#### FTP Sync Dry Run Status: \`${outcome === 'success' ? 'SUCCESS 🚀' : 'FAILED ❌'}\`
+
+            <details><summary>Show Dry Run Logs</summary>
+
+            \`\`\`
+            ${outcome}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('FTP Sync Dry Run Status');
+            });
+
+            // 2. Prepare trimmed comment body to prevent 65k char limits
+            const body = details.length > 60000
+              ? details.substring(0, 60000) + '\n\n...[Output truncated due to size limit]'
+              : details;
+
+            // 3. Update or create comment
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }

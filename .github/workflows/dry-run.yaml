@@ -6,10 +6,9 @@ on:
       - main
   workflow_dispatch:
 
-# Add permissions here at the top level
 permissions:
-  contents: read      # Needed to checkout the code
-  pull-requests: write # Needed to post comments on PRs
+  contents: read
+  pull-requests: write
   issues: write
 
 jobs:
@@ -20,43 +19,53 @@ jobs:
       - name: Get latest code
         uses: actions/checkout@v7
 
-      - name: Sync files (Dry Run)
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Dry Run FTP Sync
         id: sync
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          dry-run: true
-          local-dir: ./src/
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          # Execute mirror in dry-run mode and capture output
+          OUTPUT=$(lftp -c "
+            set ftps:initial-prot '';
+            set ssl:verify-certificate false;
+            open -u $FTP_USERNAME,$FTP_PASSWORD ftps://$FTP_SERVER;
+            mirror --reverse --dry-run ./src/ ./
+          " 2>&1)
+
+          # Store output safely in GITHUB_OUTPUT multiline context
+          echo "logs<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment PR with Dry Run Output
         uses: actions/github-script@v7
-        # Only run on PRs so workflow_dispatch runs don't crash when trying to find PR context
         if: github.event_name == 'pull_request' && always()
         env:
+          DRY_RUN_LOGS: ${{ steps.sync.outputs.logs }}
           SYNC_OUTCOME: ${{ steps.sync.outcome }}
-          # The FTP step outputs stdout/stderr directly to steps.sync.outputs
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const logs = process.env.DRY_RUN_LOGS || 'No output recorded.';
             const outcome = process.env.SYNC_OUTCOME;
 
-            // Format log preview
             const details = `#### FTP Sync Dry Run Status: \`${outcome === 'success' ? 'SUCCESS 🚀' : 'FAILED ❌'}\`
 
             <details><summary>Show Dry Run Logs</summary>
 
-            \`\`\`
-            ${outcome}
+            \`\`\`text
+            ${logs}
             \`\`\`
 
             </details>
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            // 1. Retrieve existing bot comments for the PR
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -67,12 +76,10 @@ jobs:
               return comment.user.type === 'Bot' && comment.body.includes('FTP Sync Dry Run Status');
             });
 
-            // 2. Prepare trimmed comment body to prevent 65k char limits
             const body = details.length > 60000
               ? details.substring(0, 60000) + '\n\n...[Output truncated due to size limit]'
               : details;
 
-            // 3. Update or create comment
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,

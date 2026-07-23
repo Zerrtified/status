@@ -19,95 +19,12 @@ jobs:
       - name: Get latest code
         uses: actions/checkout@v7
 
-      # Run the action inside a pseudo-terminal wrapper to record stdout directly to raw_ftp.log
-      - name: Sync files (Dry Run)
-        id: sync
-        continue-on-error: true
-        run: |
-          script -q -e -c 'cat << "EOF" > run_action.js
-          const { execSync } = require("child_process");
-          try {
-            execSync("npx --yes @samkirkland/ftp-deploy --server \"$FTP_SERVER\" --username \"$FTP_USERNAME\" --password \"$FTP_PASSWORD\" --protocol ftps --dry-run true --local-dir ./src/ --log-level standard", { stdio: "inherit" });
-          } catch (e) {
-            process.exit(1);
-          }
-          EOF
-          node run_action.js' raw_ftp.log
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-
-      - name: Process Dry Run Logs
-        id: log_capture
-        if: always()
-        run: |
-          # Clean ANSI color control codes from the recorded script output
-          sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" raw_ftp.log > clean_ftp.log
-
-          # Extract everything from the start banner to the timing summary
-          sed -n '/Thanks for using ftp-deploy/,/Total time:/p' clean_ftp.log > ftp_summary.txt || true
-
-          # If range match didn't catch, fallback to matching file changes or raw log
-          if [ ! -s ftp_summary.txt ]; then
-            grep -i -E "uploading|Upload:|Delete:|Replacing:|Files:" clean_ftp.log > ftp_summary.txt || cp clean_ftp.log ftp_summary.txt
-          fi
-
-          # Output to GITHUB_OUTPUT
-          echo "logs<<EOF" >> $GITHUB_OUTPUT
-          cat ftp_summary.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Comment PR with Dry Run Output
-        uses: actions/github-script@v7
-        if: github.event_name == 'pull_request' && always()
-        env:
-          DRY_RUN_LOGS: ${{ steps.log_capture.outputs.logs }}
-          SYNC_OUTCOME: ${{ steps.sync.outcome }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const rawLogs = process.env.DRY_RUN_LOGS || 'No changes detected.';
-            const outcome = process.env.SYNC_OUTCOME;
-
-            const details = `#### FTP Sync Dry Run Status: \`${outcome === 'success' ? 'SUCCESS 🚀' : 'FAILED ❌'}\`
-
-            <details open><summary>Show Dry Run Output</summary>
-
-            \`\`\`text
-            ${rawLogs}
-            \`\`\`
-
-            </details>
-
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('FTP Sync Dry Run Status');
-            });
-
-            const body = details.length > 60000
-              ? details.substring(0, 60000) + '\n\n...[Output truncated due to size limit]'
-              : details;
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: body
-              });
-            }
+    - name: Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftps
+        dry-run: true
+        local-dir: ./src/

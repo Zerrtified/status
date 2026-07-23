@@ -40,7 +40,7 @@ jobs:
           protocol: ftps
           dry-run: true
           local-dir: ./src/
-          log-level: verbose
+          # log-level: verbose
 
       - name: Capture Step Log
         id: log_capture
@@ -75,7 +75,7 @@ jobs:
         if: github.event_name == 'pull_request' && always()
         env:
           DRY_RUN_LOGS: ${{ steps.log_capture.outputs.logs }}
-          SYNC_OUTCOME: ${{ steps.ftp.outcome }}
+          SYNC_OUTCOME: ${{ steps.ftp.outputs }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

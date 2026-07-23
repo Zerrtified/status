@@ -30,7 +30,6 @@ jobs:
           protocol: ftps
           dry-run: true
           local-dir: ./src/
-          log-level: verbose
 
       - name: Capture Step Log
         id: log_capture

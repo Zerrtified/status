@@ -27,7 +27,7 @@ jobs:
           script -q -e -c 'cat << "EOF" > run_action.js
           const { execSync } = require("child_process");
           try {
-            execSync("npx --yes @samkirkland/ftp-deploy --server \"$FTP_SERVER\" --username \"$FTP_USERNAME\" --password \"$FTP_PASSWORD\" --protocol ftps --dry-run true --local-dir ./src/ --log-level verbose", { stdio: "inherit" });
+            execSync("npx --yes @samkirkland/ftp-deploy --server \"$FTP_SERVER\" --username \"$FTP_USERNAME\" --password \"$FTP_PASSWORD\" --protocol ftps --dry-run true --local-dir ./src/ --log-level info", { stdio: "inherit" });
           } catch (e) {
             process.exit(1);
           }

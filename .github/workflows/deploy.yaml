@@ -5,20 +5,6 @@ on:
     - main
   workflow_dispatch:
 jobs:
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v7
-  #   - name: rsync deployments
-  #     uses: burnett01/rsync-deployments@v9
-  #     with:
-  #       switches: -avzr --delete
-  #       path: src/
-  #       remote_path: ${{ secrets.REMOTE_PATH }}
-  #       remote_host: ${{ secrets.REMOTE_HOST }}
-  #       remote_port: ${{ secrets.REMOTE_PORT }}
-  #       remote_user: ${{ secrets.REMOTE_USER }}
-  #       remote_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
   web-deploy:
     name: Deploy
     runs-on: ubuntu-latest

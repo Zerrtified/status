@@ -2,20 +2,34 @@ name: DEPLOY
 on:
   push:
     branches:
-    - master
+    - main
   workflow_dispatch:
 jobs:
-  deploy:
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v7
+  #   - name: rsync deployments
+  #     uses: burnett01/rsync-deployments@v9
+  #     with:
+  #       switches: -avzr --delete
+  #       path: src/
+  #       remote_path: ${{ secrets.REMOTE_PATH }}
+  #       remote_host: ${{ secrets.REMOTE_HOST }}
+  #       remote_port: ${{ secrets.REMOTE_PORT }}
+  #       remote_user: ${{ secrets.REMOTE_USER }}
+  #       remote_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v7
-    - name: rsync deployments
-      uses: burnett01/rsync-deployments@v9
+    - name: Get latest code
+      uses: actions/checkout@v7
+
+    - name: Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
-        switches: -avzr --delete
-        path: src/
-        remote_path: ${{ secrets.REMOTE_PATH }}
-        remote_host: ${{ secrets.REMOTE_HOST }}
-        remote_port: ${{ secrets.REMOTE_PORT }}
-        remote_user: ${{ secrets.REMOTE_USER }}
-        remote_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftps

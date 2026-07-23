@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is Steveflix Down?</title>
+  <link rel="icon" type="image/svg+xml" href="/sficon.svg">
+  <style>
+    :root {
+      --bg-color: #141414;
+      --card-bg: #181818;
+      --text-main: #ffffff;
+      --text-muted: #aaaaaa;
+      --netflix-red: #e50914;
+      --status-green: #2bb673;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      padding: 20px 40px;
+      border-bottom: 1px solid #282828;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container img {
+      height: 36px;
+      display: block;
+    }
+
+    .help-title {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 800px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* Status Card */
+    .status-card {
+      background-color: var(--card-bg);
+      border: 1px solid #282828;
+      border-radius: 8px;
+      padding: 32px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .status-badge {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .status-subtext {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Details Section */
+    .info-section {
+      text-align: left;
+      background-color: var(--card-bg);
+      border: 1px solid #282828;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .info-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .info-section p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid #282828;
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 16px 20px;
+      }
+      .logo-container img {
+        height: 28px;
+      }
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+/* Need More Help Box (Centered & Max-Width) */
+    .help-action-box {
+      background-color: var(--card-bg);
+      border: 1px solid #333333;
+      border-radius: 4px;
+      padding: 16px 24px;
+      margin: 24px auto 32px auto; /* Centers the box on the page */
+      max-width: 440px;            /* Prevents it from spanning full-width */
+      width: 100%;                 /* Keeps it responsive */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .help-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .btn-go-outside {
+      display: inline-block;
+      background-color: #333333;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 10px 24px;
+      border-radius: 4px;
+      border: 1px solid #444444;
+      white-space: nowrap;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-go-outside:hover {
+      background-color: #444444;
+      border-color: #666666;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 500px) {
+      .help-action-box {
+        flex-direction: column;
+        text-align: center;
+      }
+      .btn-go-outside {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <img src="/logo_full.svg" alt="Steveflix Logo">
+    </div>
+    <div class="help-title">Is It Down?</div>
+  </header>
+
+  <main>
+    <h1>Steveflix Service Status</h1>
+
+    <div class="status-card">
+      <!-- Live Healthchecks.io Status Badge -->
+      <img class="status-badge" src="https://healthchecks.io/badge/93c7b0ea-597a-4478-8dd4-9dad3e/dsl86l5l-2/Steveflix.svg" alt="Steveflix Status Badge">
+      <p class="status-subtext">We continuously monitor the health of the Steveflix ecosystem. If you are experiencing issues, check back here for updates.</p>
+    </div>
+
+    <div class="info-section">
+      <h2>About This Page</h2>
+      <p>This status page provides real-time health checks for core Steveflix services. If everything is green, the issue might be on your local network or client device.</p>
+    </div>
+  </main>
+
+<!-- Netflix-Style "Need More Help?" Box -->
+  <section class="help-action-box">
+    <span class="help-text">Need more help?</span>
+    <a href="https://www.google.com/maps/search/parks+near+me" target="_blank" rel="noopener" class="btn-go-outside">
+      Go Outside
+    </a>
+  </section>
+
+  <footer>
+    <p>&copy; Steveflix (Not affiliated with Netflix). Need to request content? Visit <a href="https://requests.steveflix.ca">requests.steveflix.ca</a></p>
+  </footer>
+
+</body>
+</html>

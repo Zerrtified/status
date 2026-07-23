@@ -6,6 +6,12 @@ on:
       - main
   workflow_dispatch:
 
+# Add permissions here at the top level
+permissions:
+  contents: read      # Needed to checkout the code
+  pull-requests: write # Needed to post comments on PRs
+  issues: write
+
 jobs:
   web-deploy:
     name: Dry Run

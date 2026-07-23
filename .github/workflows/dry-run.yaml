@@ -1,0 +1,25 @@
+name: Dry Run
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+    - main
+  workflow_dispatch:
+jobs:
+  web-deploy:
+    name: Dry Run
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get latest code
+      uses: actions/checkout@v7
+
+    - name: Sync files
+      id: sync
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftps
+        dry-run: true
+        local-dir: ./src/

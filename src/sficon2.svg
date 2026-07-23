@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Netflix Front Red Gradient -->
+    <linearGradient id="redFront" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E50914" />
+      <stop offset="100%" stop-color="#B81D24" />
+    </linearGradient>
+
+    <!-- Netflix Darker Red Shadow Gradient -->
+    <linearGradient id="redBack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A10E15" />
+      <stop offset="100%" stop-color="#5B0004" />
+    </linearGradient>
+
+    <!-- Red Background Glow -->
+    <filter id="bgGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="25" result="blur" />
+    </filter>
+
+    <!-- Fold Shadow Effect -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Dark Background -->
+  <rect width="512" height="512" rx="96" fill="#141414" />
+
+  <!-- Ambient Red Backlight -->
+  <g opacity="0.4" filter="url(#bgGlow)">
+    <path d="M 176 80 L 256 16 L 336 80 L 336 432 L 256 496 L 176 432 Z" fill="#E50914" />
+  </g>
+
+  <!-- Iconic Cool S Construction -->
+  <g filter="url(#dropShadow)">
+    <!-- 1. Top Point / Roof -->
+    <polygon points="256,32 336,96 296,96 256,64 216,96 176,96" fill="url(#redFront)" />
+
+    <!-- 2. Top Vertical Pillars -->
+    <rect x="176" y="112" width="40" height="96" rx="2" fill="url(#redFront)" />
+    <rect x="236" y="112" width="40" height="96" rx="2" fill="url(#redFront)" />
+    <rect x="296" y="112" width="40" height="96" rx="2" fill="url(#redFront)" />
+
+    <!-- 3. Overlapping Center Diagonal Folds -->
+    <!-- Back Diagonal (Underneath) -->
+    <polygon points="176,208 216,208 276,268 236,268" fill="url(#redBack)" />
+    <!-- Front Diagonal (Overlapping) -->
+    <polygon points="236,208 276,208 336,268 296,268" fill="url(#redFront)" />
+
+    <!-- 4. Bottom Vertical Pillars -->
+    <rect x="176" y="280" width="40" height="96" rx="2" fill="url(#redFront)" />
+    <rect x="236" y="280" width="40" height="96" rx="2" fill="url(#redFront)" />
+    <rect x="296" y="280" width="40" height="96" rx="2" fill="url(#redFront)" />
+
+    <!-- 5. Bottom Point / Tail -->
+    <polygon points="176,392 216,392 256,424 296,392 336,392 256,456" fill="url(#redFront)" />
+  </g>
+</svg>

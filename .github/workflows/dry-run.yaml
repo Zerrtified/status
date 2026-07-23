@@ -75,7 +75,7 @@ jobs:
         if: github.event_name == 'pull_request' && always()
         env:
           DRY_RUN_LOGS: ${{ steps.log_capture.outputs.logs }}
-          SYNC_OUTCOME: ${{ steps.ftp.outputs }}
+          SYNC_OUTCOME: ${{ steps.ftp.outcome }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

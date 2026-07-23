@@ -21,4 +21,4 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
         dry-run: true
-        local-dir: ./src/
+        local-dir: src/

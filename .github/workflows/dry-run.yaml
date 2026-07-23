@@ -1,4 +1,4 @@
-name: Dry-Run
+name: Dry Run
 on:
   pull_request:
     types: [opened, reopened]
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 jobs:
   web-deploy:
-    name: Dry-Run
+    name: Dry Run
     runs-on: ubuntu-latest
     steps:
     - name: Get latest code
@@ -21,3 +21,4 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
         dry-run: true
+        local-dir: ./src/

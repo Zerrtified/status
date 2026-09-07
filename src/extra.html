@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +74,7 @@
       border-radius: 8px;
       padding: 32px 24px;
       margin-bottom: 32px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -129,22 +130,28 @@
       header {
         padding: 16px 20px;
       }
+
       .logo-container img {
         height: 28px;
       }
+
       h1 {
         font-size: 1.75rem;
       }
     }
-/* Need More Help Box (Centered & Max-Width) */
+
+    /* Need More Help Box (Centered & Max-Width) */
     .help-action-box {
       background-color: var(--card-bg);
       border: 1px solid #333333;
       border-radius: 4px;
       padding: 16px 24px;
-      margin: 24px auto 32px auto; /* Centers the box on the page */
-      max-width: 440px;            /* Prevents it from spanning full-width */
-      width: 100%;                 /* Keeps it responsive */
+      margin: 24px auto 32px auto;
+      /* Centers the box on the page */
+      max-width: 440px;
+      /* Prevents it from spanning full-width */
+      width: 100%;
+      /* Keeps it responsive */
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -182,12 +189,14 @@
         flex-direction: column;
         text-align: center;
       }
+
       .btn-go-outside {
         width: 100%;
       }
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -203,19 +212,23 @@
     <div class="status-card">
       <!-- Live Healthchecks.io Status Badges Container -->
       <div class="badge-container">
-        <img class="status-badge" src="https://healthchecks.io/b/3/a8fe30aa-42c9-4cc8-9707-9f3c27b176c6.svg" alt="Steveflix Status Badge">
-        <img class="status-badge" src="https://healthchecks.io/b/2/5804a92e-2108-47b1-96ad-61d83eabe175.svg" alt="Steveflix Requests Status Badge">
+        <img class="status-badge" src="https://healthchecks.io/b/3/a8fe30aa-42c9-4cc8-9707-9f3c27b176c6.svg"
+          alt="Steveflix Status Badge">
+        <img class="status-badge" src="https://healthchecks.io/b/2/5804a92e-2108-47b1-96ad-61d83eabe175.svg"
+          alt="Steveflix Requests Status Badge">
       </div>
-      <p class="status-subtext">We continuously monitor the health of the Steveflix ecosystem. If you are experiencing issues, check back here for updates.</p>
+      <p class="status-subtext">We continuously monitor the health of the Steveflix ecosystem. If you are experiencing
+        issues, check back here for updates.</p>
     </div>
 
     <div class="info-section">
       <h2>About This Page</h2>
-      <p>This status page provides real-time health checks for core Steveflix services. If everything is green, the issue might be on your local network or client device.</p>
+      <p>This status page provides real-time health checks for core Steveflix services. If everything is green, the
+        issue might be on your local network or client device.</p>
     </div>
   </main>
 
-<!-- Netflix-Style "Need More Help?" Box -->
+  <!-- Netflix-Style "Need More Help?" Box -->
   <section class="help-action-box">
     <span class="help-text">Need more help?</span>
     <a href="https://www.google.com/maps/search/parks+near+me" target="_blank" rel="noopener" class="btn-go-outside">
@@ -224,8 +237,10 @@
   </section>
 
   <footer>
-    <p>&copy; Steveflix (Not affiliated with Netflix). Need to request content? Visit <a href="https://requests.steveflix.ca">requests.steveflix.ca</a></p>
+    <p>&copy; Steveflix (Not affiliated with Netflix). Need to request content? Visit <a
+        href="https://requests.steveflix.ca">requests.steveflix.ca</a></p>
   </footer>
 
 </body>
+
 </html>

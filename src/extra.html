@@ -81,6 +81,17 @@
       gap: 16px;
     }
 
+    /* Horizontal Badges Container */
+    .badge-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      /* Allows stacking naturally on narrow screens */
+    }
+
     .status-badge {
       max-width: 100%;
       height: auto;
@@ -147,11 +158,8 @@
       border-radius: 4px;
       padding: 16px 24px;
       margin: 24px auto 32px auto;
-      /* Centers the box on the page */
       max-width: 440px;
-      /* Prevents it from spanning full-width */
       width: 100%;
-      /* Keeps it responsive */
       display: flex;
       align-items: center;
       justify-content: space-between;
